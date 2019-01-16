@@ -22,9 +22,12 @@ router.post('/register', async(req, res) => {
         if (await User.findOne({email}))
         return res.status(400).send({error: 'Usuario Ja existe'});
 
+        req.body.accountType = 1;
+        
         const user = await User.create(req.body);
 
         user.password = undefined;
+    
 
         return res.send({user, token: generateToken({id: user.id})});
     } catch (err) {
@@ -44,7 +47,6 @@ router.post('/autenticate', async(req, res) => {
         return res.status(400).send({error: 'Usuário/Senha Inválido'});
 
     user.password = undefined;
-
 
     res.send({user, token: generateToken({id: user.id})});
 
