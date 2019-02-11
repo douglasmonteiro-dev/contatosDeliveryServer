@@ -20,4 +20,4 @@ require('./app/controllers/index')(app);
 // });
 
 
-app.listen(3000, '178.128.3.125');
+app.listen(3000, '104.248.178.42');
