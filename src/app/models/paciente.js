@@ -35,11 +35,13 @@ const PacienteSchema = new mongoose.Schema({
     }
 });
 
-UserSchema.pre('save', async function(next) {
+PacienteSchema.pre('save', async function(next) {
+    const hash = await bcrypt.hash(this.password, 10);
+    this.password = hash;
 
     next();
 });
 
-const User = mongoose.model('User', UserSchema);
+const Paciente = mongoose.model('User', PacienteSchema);
 
-module.exports = User;
+module.exports = Paciente;
