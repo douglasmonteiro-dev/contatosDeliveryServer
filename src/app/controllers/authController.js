@@ -7,6 +7,7 @@ const mailer = require('../../modules/mailer')
 const authConfig = require('../../config/auth')
 
 const User = require('../models/user');
+const Paciente = require('../models/paciente');
 
 const router = express.Router();
 
@@ -25,13 +26,17 @@ router.post('/register', async(req, res) => {
         req.body.accountType = 1;
         
         const user = await User.create(req.body);
-
+        
+        const userId = user._id;
+        if (user.accountType === 1) {
+            await Paciente.create({ userId });
+        }
         user.password = undefined;
     
 
         return res.send({user, token: generateToken({id: user.id})});
     } catch (err) {
-        res.status(400).send({ error: 'Falha no Registro'});
+        res.status(400).send({ error: 'Falha no Registro', message: err});
     }
 });
 

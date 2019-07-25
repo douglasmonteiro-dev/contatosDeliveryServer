@@ -1,7 +1,7 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 const User = require('../models/user');
-const Paciente = require('../models/paciente');
+const Agendamento = require('../models/agendamento');
 
 
 const router = express.Router();
@@ -18,10 +18,9 @@ router.get('/', async(req, res) => {
         return res.status(400).send({error: 'Usuario Paciente'});
 
        
-        const pacientes = await User.find({accountType: 1});
-        console.log(JSON.stringify(pacientes));
+        const agendamento = await Agendamento.find();
 
-        res.send({pacientes: pacientes, user: req.userId});
+        res.send({agendamentos: agendamento, user: req.userId});
         
             
 
@@ -39,10 +38,9 @@ router.get('/selecionar', async(req, res) => {
         return res.status(400).send({error: 'Usuario Paciente'});
 
        
-        const paciente = await User.findOne({accountType: 1, _id: req.query.userId});
-        const dados = await Paciente.findOne({userId: req.query.userId});
+        const agendamento = await Agendamento.find({userId: req.query.userId});
 
-        res.send({usuarioPaciente: paciente, dadosPaciente: dados, user: req.userId});
+        res.send({agendamentos: agendamento, user: req.userId});
         
             
            
@@ -51,24 +49,19 @@ router.get('/selecionar', async(req, res) => {
         res.status(400).send({ error: err});
     }
 });
-router.post('/atualizar_perfil', async(req, res) => {
+router.post('/novo', async(req, res) => {
     const {userId} = req.body;
     
     try {
-        if (await Paciente.findOne({userId}))
-        return res.status(400).send({error: 'Usuario Ja existe'});
-
-        req.body.accountType = 1;
         
-        const user = await User.create(req.body);
+        const agendamento = await Agendamento.create(req.body);
 
-        user.password = undefined;
     
 
-        return res.send({user, token: generateToken({id: user.id})});
+        return res.send({agendamento, user: req.userId});
     } catch (err) {
         res.status(400).send({ error: 'Falha no Registro'});
     }
 });
 
-module.exports = app => app.use('/pacientes', router);
+module.exports = app => app.use('/agendamento', router);

@@ -1,50 +1,47 @@
 const mongoose = require('../../database');
-const bcrypt = require('bcryptjs');
 
-const PacienteSchema = new mongoose.Schema({
+const AgendaSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: true
     },
-    cpf: {
-        type: String,
+    inicio: {
+        type: Date,
         required: false,
         lowercase: true
+    },
+    fim: {
+        type: Date,
+        required: false,
+        select: true
+    },
+    servico: {
+        type: String,
+        required: false,
+        select: false
+    },
+    tempoAtendimento: {
+        type: String,
+        required: false,
+        select: false
     },
     endereco: {
         type: String,
         required: false,
         select: true
     },
-    lat: {
-        type: String,
-        required: false,
-        select: false
-    },
-    lgt: {
-        type: String,
-        required: false,
-        select: false
-    },
-    celular: {
+    valor: {
         type: String,
         required: false,
         select: true
     },
-    telefone: {
-        type: String,
-        required: false,
-        select: true
-    },
-    agendamentos: [{
-        data: Date,
-        servico: String,
-        valor: Number,
-        pagamento: Boolean
-    }]
+    formaPagamento: {
+        dinheiro: Boolean,
+        pagSeguro: Boolean
+    }
 });
 
 
-const Paciente = mongoose.model('Paciente', PacienteSchema);
+const Agenda = mongoose.model('Agenda', AgendaSchema);
 
-module.exports = Paciente;
+module.exports = Agenda;
