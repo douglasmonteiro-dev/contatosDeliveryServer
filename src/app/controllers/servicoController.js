@@ -1,7 +1,8 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 const User = require('../models/user');
-const Paciente = require('../models/paciente');
+const Agenda = require('../models/agenda');
+const Servico = require('../models/servico');
 
 
 const router = express.Router();
@@ -18,10 +19,10 @@ router.get('/', async(req, res) => {
         return res.status(400).send({error: 'Usuario Paciente'});
 
        
-        const pacientes = await User.find({accountType: 1});
-        console.log(JSON.stringify(pacientes));
+        const servicos = await Servico.find();
+        console.log(JSON.stringify(servicos));
 
-        res.send({pacientes: pacientes, user: req.userId});
+        res.send({servicos: servicos, user: req.userId});
         
             
 
@@ -30,6 +31,23 @@ router.get('/', async(req, res) => {
         res.status(400).send({ error: err});
     }
 });
+
+router.post('/novo', async(req, res) => {
+    const {name} = req.body;
+    
+    try {
+        if (await Servico.findOne({name}))
+        return res.status(400).send({error: 'Serviço Ja existe'});
+        
+        const servico = await Servico.create(req.body);
+        
+
+        return res.send({servico, user: req.userId});
+    } catch (err) {
+        res.status(400).send({ error: 'Falha no Registro', message: err});
+    }
+});
+
 router.get('/selecionar', async(req, res) => {
     try {
         const user = await User.findById(req.userId).select();
@@ -39,10 +57,9 @@ router.get('/selecionar', async(req, res) => {
         return res.status(400).send({error: 'Usuario Paciente'});
 
        
-        const paciente = await User.findOne({accountType: 1, _id: req.query.userId});
-        const dados = await Paciente.findOne({userId: req.query.userId});
+        const servico = await Servico.findOne({_id: req.query.userId});
 
-        res.send({usuarioPaciente: paciente, dadosPaciente: dados, user: req.userId});
+        res.send({servico: servico, user: req.userId});
         
             
            
@@ -94,7 +111,7 @@ router.delete('/apagar', async(req, res) => {
         return res.status(400).send({error: 'Usuario Paciente'});
 
        
-        await User.findByIdAndDelete(req.query.userId);
+        await Servico.findByIdAndDelete(req.query.userId);
 
 
         res.send();
@@ -106,7 +123,7 @@ router.delete('/apagar', async(req, res) => {
         res.status(400).send({ error: err});
     }
 });
-router.post('/atualizar_perfil', async(req, res) => {
+router.post('/atualizar_servico', async(req, res) => {
     const {userId} = req.body;
     
     try {
@@ -126,4 +143,4 @@ router.post('/atualizar_perfil', async(req, res) => {
     }
 });
 
-module.exports = app => app.use('/pacientes', router);
+module.exports = app => app.use('/servico', router);

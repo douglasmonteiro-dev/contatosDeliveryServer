@@ -2,6 +2,7 @@ const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 const User = require('../models/user');
 const Agendamento = require('../models/agendamento');
+const Agenda = require('../models/agenda')
 
 
 const router = express.Router();
@@ -29,7 +30,7 @@ router.get('/', async(req, res) => {
         res.status(400).send({ error: err});
     }
 });
-router.get('/selecionar', async(req, res) => {
+router.get('/dias-disponiveis', async(req, res) => {
     try {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
@@ -37,10 +38,10 @@ router.get('/selecionar', async(req, res) => {
         if (user.accountType == 1)
         return res.status(400).send({error: 'Usuario Paciente'});
 
-       
-        const agendamento = await Agendamento.find({userId: req.query.userId});
+        const agendas = await Agenda.find({inicio:{$lte: req.query.inicio}, fim: {$gte: req.query.fim}});
+        
 
-        res.send({agendamentos: agendamento, user: req.userId});
+        res.send({agendas: agendas, user: req.userId});
         
             
            
@@ -49,11 +50,34 @@ router.get('/selecionar', async(req, res) => {
         res.status(400).send({ error: err});
     }
 });
-router.post('/novo', async(req, res) => {
-    const {userId} = req.body;
+router.get('/agendas-disponiveis', async(req, res) => {
+    try {
+        const user = await User.findById(req.userId).select();
+        console.log(JSON.stringify(user));
+
+        if (user.accountType == 1)
+        return res.status(400).send({error: 'Usuario Paciente'});
+
+        const dia = new Date(req.query.dia);
+        let agendas = await Agenda.find({inicio:{$lte: req.query.dia}, fim: {$gte: req.query.dia}})
+        for (let agenda of agendas) {
+            agenda.agendamentos = await Agendamento.find({agendaId: agenda.id});
+        }
+        
+
+        res.send({agendas: agendas, user: req.userId});
+        
+            
+           
+        
+    } catch (err) {
+        res.status(400).send({ error: err});
+    }
+});
+router.post('/agendar', async(req, res) => {
     
     try {
-        
+        req.body.userId = req.userId;
         const agendamento = await Agendamento.create(req.body);
 
     

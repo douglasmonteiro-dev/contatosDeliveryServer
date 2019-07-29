@@ -21,7 +21,7 @@ const PacienteSchema = new mongoose.Schema({
         required: false,
         select: false
     },
-    lgt: {
+    lng: {
         type: String,
         required: false,
         select: false
@@ -33,6 +33,31 @@ const PacienteSchema = new mongoose.Schema({
     },
     telefone: {
         type: String,
+        required: false,
+        select: true
+    },
+    nomeCartao: {
+        type: String,
+        required: false,
+        select: true
+    },
+    numeroCartao: {
+        type: Number,
+        required: false,
+        select: true
+    },
+    cvvCartao: {
+        type: Number,
+        required: false,
+        select: true
+    },
+    mesCartao: {
+        type: Number,
+        required: false,
+        select: true
+    },
+    anoCartao: {
+        type: Number,
         required: false,
         select: true
     },

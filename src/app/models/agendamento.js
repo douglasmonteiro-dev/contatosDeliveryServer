@@ -9,13 +9,22 @@ const AgendamentoSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    inicio: {
+    servicoId: {
+        type: String,
+        required: true
+    },
+    data: {
         type: Date,
         required: false,
         lowercase: true
     },
-    fim: {
-        type: Date,
+    hora: {
+        type: Number,
+        required: false,
+        select: true
+    },
+    minutos: {
+        type: Number,
         required: false,
         select: true
     },

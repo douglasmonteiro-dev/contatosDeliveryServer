@@ -5,25 +5,34 @@ const AgendaSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    servicoId: {
+        type: String,
+        required: true
+    },
     inicio: {
         type: Date,
-        required: false,
-        lowercase: true
+        required: true,
+        select: true
     },
     fim: {
         type: Date,
+        required: true,
+        select: true,
+    },
+    horaInicio: {
+        type: String,
+        required: false,
+        lowercase: true
+    },
+    horaFim: {
+        type: String,
         required: false,
         select: true
     },
-    servico: {
-        type: String,
-        required: false,
-        select: false
-    },
     tempoAtendimento: {
-        type: String,
+        type: Number,
         required: false,
-        select: false
+        select: true
     },
     endereco: {
         type: String,
@@ -38,6 +47,10 @@ const AgendaSchema = new mongoose.Schema({
     formaPagamento: {
         dinheiro: Boolean,
         pagSeguro: Boolean
+    },
+    agendamentos: {
+        type: Array,
+        select: true
     }
 });
 
