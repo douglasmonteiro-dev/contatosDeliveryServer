@@ -35,7 +35,7 @@ router.get('/selecionar', async(req, res) => {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
 
-        if (user.accountType == 1)
+        if (user.accountType == 1 && user.id !== req.query.userId)
         return res.status(400).send({error: 'Usuario Paciente'});
 
        
@@ -56,7 +56,7 @@ router.put('/atualizar', async(req, res) => {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
 
-        if (user.accountType == 1)
+        if (user.accountType == 1  && user.id !== req.query.userId)
         return res.status(400).send({error: 'Usuario Paciente'});
 
        

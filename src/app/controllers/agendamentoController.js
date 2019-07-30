@@ -35,7 +35,7 @@ router.get('/dias-disponiveis', async(req, res) => {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
 
-        if (user.accountType == 1)
+        if (user.accountType == 1  && user.id !== req.query.userId)
         return res.status(400).send({error: 'Usuario Paciente'});
 
         const agendas = await Agenda.find({inicio:{$lte: req.query.inicio}, fim: {$gte: req.query.fim}});
@@ -55,7 +55,7 @@ router.get('/agendas-disponiveis', async(req, res) => {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
 
-        if (user.accountType == 1)
+        if (user.accountType == 1  && user.id !== req.query.userId)
         return res.status(400).send({error: 'Usuario Paciente'});
 
         const dia = new Date(req.query.dia);
