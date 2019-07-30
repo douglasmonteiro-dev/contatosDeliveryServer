@@ -2,6 +2,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+let https = require('https');
 
 const app = express();
 
@@ -20,5 +21,8 @@ require('./app/controllers/index')(app);
     
 // });
 
-
-app.listen(3000, 'www.tatiane.ntr.br');
+https.createServer({
+  key: fs.readFileSync('/etc/letsencrypt/live/tatiane.ntr.br/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/tatiane.ntr.br/fullchain.pem')
+}, app)
+.listen(3000);
