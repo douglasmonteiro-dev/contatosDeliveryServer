@@ -35,8 +35,6 @@ router.get('/dias-disponiveis', async(req, res) => {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
 
-        if (user.accountType == 1  && user.id !== req.query.userId)
-        return res.status(400).send({error: 'Usuario Paciente'});
 
         const agendas = await Agenda.find({inicio:{$lte: req.query.inicio}, fim: {$gte: req.query.fim}});
         
@@ -54,9 +52,6 @@ router.get('/agendas-disponiveis', async(req, res) => {
     try {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
-
-        if (user.accountType == 1  && user.id !== req.query.userId)
-        return res.status(400).send({error: 'Usuario Paciente'});
 
         const dia = new Date(req.query.dia);
         let agendas = await Agenda.find({inicio:{$lte: req.query.dia}, fim: {$gte: req.query.dia}})
@@ -77,7 +72,13 @@ router.get('/agendas-disponiveis', async(req, res) => {
 router.post('/agendar', async(req, res) => {
     
     try {
-        req.body.userId = req.userId;
+        const user = await User.findById(req.userId).select();
+        
+        
+        if (user.isNutri()) {
+            return res.status(400).send({error: 'Usuario Nutricionista'});
+        }
+
         const agendamento = await Agendamento.create(req.body);
 
     
