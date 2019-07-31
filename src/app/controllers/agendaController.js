@@ -31,9 +31,6 @@ router.get('/', async(req, res) => {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
 
-        if (user.accountType == 1)
-        return res.status(400).send({error: 'Usuario Paciente'});
-
        
         const agenda = await Agenda.find();
 
