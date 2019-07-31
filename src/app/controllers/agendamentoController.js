@@ -85,7 +85,7 @@ router.post('/agendar', async(req, res) => {
 
         return res.send({agendamento, user: req.userId});
     } catch (err) {
-        res.status(400).send({ error: 'Falha no Registro'});
+        res.status(400).send({ error: 'Falha no Registro'}, err);
     }
 });
 
