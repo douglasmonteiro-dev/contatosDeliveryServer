@@ -48,10 +48,6 @@ router.get('/selecionar', async(req, res) => {
     try {
         const user = await User.findById(req.userId).select();
         console.log(JSON.stringify(user));
-
-        if (user.accountType == 1)
-        return res.status(400).send({error: 'Usuario Paciente'});
-
        
         const servico = await Servico.findOne({_id: req.query.userId});
 
