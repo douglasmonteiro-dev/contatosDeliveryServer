@@ -9,6 +9,10 @@ const AgendaSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    servico: {
+        type: String,
+        required: true
+    },
     inicio: {
         type: Date,
         required: true,
