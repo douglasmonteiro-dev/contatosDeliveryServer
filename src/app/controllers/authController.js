@@ -126,25 +126,6 @@ router.post('/reset_password', async(req, res) => {
 
 router.get('/listar_servicos', async(req, res) => {
     try {
-        const user = await User.findById(req.userId).select();
-        console.log(JSON.stringify(user));
-       
-        const servicos = await Servico.find();
-        console.log(JSON.stringify(servicos));
-
-        res.send({servicos: servicos, user: req.userId});
-        
-            
-
-        
-    } catch (err) {
-        res.status(400).send({ error: err});
-    }
-});
-router.get('/listar_servicos', async(req, res) => {
-    try {
-        const user = await User.findById(req.userId).select();
-        console.log(JSON.stringify(user));
        
         const servicos = await Servico.find();
         console.log(JSON.stringify(servicos));
@@ -160,11 +141,7 @@ router.get('/listar_servicos', async(req, res) => {
 });
 router.get('/listar_agendas', async(req, res) => {
     try {
-        const user = await User.findById(req.userId).select();
-        console.log(JSON.stringify(user));
-
-        if (user.accountType == 1)
-        return res.status(400).send({error: 'Usuario Paciente'});
+        
 
        
         const agenda = await Agenda.find({servicoId: req.query.servicoId});
