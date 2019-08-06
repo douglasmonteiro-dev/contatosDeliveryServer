@@ -146,7 +146,7 @@ router.get('/listar_agendas', async(req, res) => {
         
 
        
-        const agendas = await Agenda.find({servicoId: req.query.servicoId});
+        let agendas = await Agenda.find({servicoId: req.query.servicoId});
         for (let agenda of agendas) {
             agenda.agendamentos = await Agendamento.find({agendaId: agenda.id});
         }
