@@ -10,6 +10,7 @@ const User = require('../models/user');
 const Paciente = require('../models/paciente');
 const Servico = require('../models/servico');
 const Agenda = require('../models/agenda');
+const Agendamento = require('../models/agendamento');
 
 const router = express.Router();
 
@@ -138,7 +139,7 @@ router.get('/listar_servicos', async(req, res) => {
 
         
     } catch (err) {
-        res.status(400).send({ error: err});
+            res.status(400).send({ error: err});
     }
 });
 router.get('/listar_agendas', async(req, res) => {
