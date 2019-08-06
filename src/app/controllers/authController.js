@@ -146,9 +146,12 @@ router.get('/listar_agendas', async(req, res) => {
         
 
        
-        const agenda = await Agenda.find({servicoId: req.query.servicoId});
+        const agendas = await Agenda.find({servicoId: req.query.servicoId});
+        for (let agenda of agendas) {
+            agenda.agendamentos = await Agendamento.find({agendaId: agenda.id});
+        }
 
-        res.send({agendas: agenda, user: req.userId});
+        res.send({agendas: agendas, user: req.userId});
         
             
            
