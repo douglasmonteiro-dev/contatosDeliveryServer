@@ -8,6 +8,8 @@ const authConfig = require('../../config/auth')
 
 const User = require('../models/user');
 const Paciente = require('../models/paciente');
+const Servico = require('../models/servico');
+const Agenda = require('../models/agenda');
 
 const router = express.Router();
 
