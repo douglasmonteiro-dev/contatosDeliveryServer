@@ -132,7 +132,7 @@ router.get('/listar_servicos', async(req, res) => {
         const servicos = await Servico.find();
         console.log(JSON.stringify(servicos));
 
-        res.send({servicos: servicos, user: req.userId});
+        res.send({servicos: servicos});
         
             
 
@@ -151,7 +151,7 @@ router.get('/listar_agendas', async(req, res) => {
             agenda.agendamentos = await Agendamento.find({agendaId: agenda.id});
         }
 
-        res.send({agendas: agendas, user: req.userId});
+        res.send({agendas: agendas});
         
             
            
