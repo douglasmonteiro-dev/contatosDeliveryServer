@@ -69,16 +69,35 @@ router.get('/agendas-disponiveis', async(req, res) => {
         res.status(400).send({ error: err});
     }
 });
+router.get('/meus-agendamentos', async(req, res) => {
+    try {
+        const user = await User.findById(req.userId).select();
+        console.log(JSON.stringify(user));
+
+            const agendamentos = await Agendamento.find({userId: req.userId});
+        
+
+        res.send({agendamentos: agendamentos, user: req.userId});
+        
+            
+           
+        
+    } catch (err) {
+        res.status(400).send({ error: err});
+    }
+});
 router.post('/agendar', async(req, res) => {
     
     try {
         const user = await User.findById(req.userId).select();
+        const agenda = await Agenda.findById(req.body.agendaId).select();
+        const profissional = await User.findById(agenda.userId).select();
         
         
-        if (user.isNutri()) {
+        if (user.accountType == 2) {
             return res.status(400).send({error: 'Usuario Nutricionista'});
         }
-
+        req.body = {...req.body, userId: user.id, nome: user.name, profissional: profissional.name};
         const agendamento = await Agendamento.create(req.body);
 
     
@@ -86,6 +105,27 @@ router.post('/agendar', async(req, res) => {
         return res.send({agendamento, user: req.userId});
     } catch (err) {
         res.status(400).send({ error: 'Falha no Registro'}, err);
+    }
+});
+router.delete('/apagar', async(req, res) => {
+    try {
+        const agendamento = await Agendamento.findById(req.query.agendamentoId).select();
+        console.log(JSON.stringify(agendamento));
+
+        if (req.userId !== agendamento.userId)
+        return res.status(400).send({error: 'Consulta de outro Paciente'});
+
+       
+        await Agendamento.findByIdAndDelete(req.query.agendamentoId);
+
+
+        res.send();
+        
+            
+           
+        
+    } catch (err) {
+        res.status(400).send({ error: err});
     }
 });
 

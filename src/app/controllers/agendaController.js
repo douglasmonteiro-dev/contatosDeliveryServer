@@ -1,6 +1,7 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 const Agenda = require('../models/agenda');
+const Agendamento = require('../models/agendamento');
 const User = require('../models/user');
 
 
@@ -32,9 +33,12 @@ router.get('/', async(req, res) => {
         console.log(JSON.stringify(user));
 
        
-        const agenda = await Agenda.find();
+        const agendas = await Agenda.find();
+        for (let agenda of agendas) {
+            agenda.agendamentos = await Agendamento.find({agendaId: agenda.id});
+        }
 
-        res.send({agendas: agenda, user: req.userId});
+        res.send({agendas: agendas, user: req.userId});
         
             
 

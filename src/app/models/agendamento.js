@@ -31,7 +31,22 @@ const AgendamentoSchema = new mongoose.Schema({
     servico: {
         type: String,
         required: false,
-        select: false
+        select: true
+    },
+    nome: {
+        type: String,
+        required: false,
+        select: true
+    },
+    profissional: {
+        type: String,
+        required: false,
+        select: true
+    },
+    tempoAtendimento: {
+        type: Number,
+        required: false,
+        select: true
     },
     pagamento: {
         type: Boolean,
