@@ -2,7 +2,9 @@ const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 const User = require('../models/user');
 const Agendamento = require('../models/agendamento');
-const Agenda = require('../models/agenda')
+const Agenda = require('../models/agenda');
+const mailer = require('../../modules/mailer');
+
 
 
 const router = express.Router();
@@ -98,9 +100,20 @@ router.post('/agendar', async(req, res) => {
             return res.status(400).send({error: 'Usuario Nutricionista'});
         }
         req.body = {...req.body, userId: user.id, nome: user.name, profissional: profissional.name};
-        const agendamento = await Agendamento.create(req.body);
+        let agendamento = await Agendamento.create(req.body);
 
-    
+        agendamento.frendlyData = new Date(agendamento.data).toLocaleDateString('en-GB');
+        mailer.sendMail({
+            to: user.email,
+            from: 'Tatiane Ribeiro Nutricionista',
+            subject: 'AGENDAMENTO DE CONSULTA',
+            template: 'auth/agendado',
+            context: {agendamento}
+        }, (err) => {
+            if(err)
+                return res.status(400).send({error: 'Não consigo enviar email'});
+            return res.send();
+        })
 
         return res.send({agendamento, user: req.userId});
     } catch (err) {

@@ -84,7 +84,8 @@ router.post('/forgot_password', async (req, res) => {
 
         mailer.sendMail({
             to: email,
-            from: 'contato@cooperdev.com.br',
+            from: 'Tatiane Ribeiro Nutricionista',
+            subject: 'RESET DE SENHA',
             template: 'auth/forgot_password',
             context: {token}
         }, (err) => {
