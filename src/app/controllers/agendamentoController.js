@@ -4,6 +4,7 @@ const User = require('../models/user');
 const Agendamento = require('../models/agendamento');
 const Agenda = require('../models/agenda');
 const mailer = require('../../modules/mailer');
+const moment = require('moment');
 
 
 
@@ -102,7 +103,8 @@ router.post('/agendar', async(req, res) => {
         req.body = {...req.body, userId: user.id, nome: user.name, profissional: profissional.name};
         let agendamento = await Agendamento.create(req.body);
 
-        agendamento.frendlyData = new Date(agendamento.data).toLocaleDateString('en-GB');
+        agendamento.frendlyData = moment(agendamento.data).locale('pt-BR');
+
         mailer.sendMail({
             to: user.email,
             from: 'Tatiane Ribeiro Nutricionista',

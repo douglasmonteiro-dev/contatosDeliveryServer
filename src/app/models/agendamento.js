@@ -52,6 +52,11 @@ const AgendamentoSchema = new mongoose.Schema({
         type: Boolean,
         required: false,
         select: false
+    },
+    confirmado: {
+        type: Boolean,
+        required: false,
+        select: true
     }
 });
 

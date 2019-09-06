@@ -162,5 +162,29 @@ router.get('/listar_agendas', async(req, res) => {
         res.status(400).send({ error: err});
     }
 });
+router.get('/horarios-disponiveis', async(req, res) => {
+    try {
+        
+
+       
+        let agendas = await Agenda.find({servicoId: req.query.servicoId, userId: req.query.userId});
+        for (let agenda of agendas) {
+            
+        }
+        if (agendas) {
+            for (let agenda of agendas) {
+                agenda.agendamentos = await Agendamento.find({agendaId: agenda.id}).sort({data: 1});
+            }
+        }
+
+        res.send({agendas: agendas});
+        
+            
+           
+        
+    } catch (err) {
+        res.status(400).send({ error: err});
+    }
+});
 
 module.exports = app => app.use('/auth', router);
