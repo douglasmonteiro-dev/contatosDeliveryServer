@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const mailer = require('../../modules/mailer')
+const moment = require('moment');
 
 const authConfig = require('../../config/auth')
 
@@ -148,36 +149,16 @@ router.get('/listar_agendas', async(req, res) => {
         
 
        
-        let agendas = await Agenda.find({servicoId: req.query.servicoId});
+        let agendas = await Agenda.find();
+        let agendasSelecionadas = [];
         for (let agenda of agendas) {
-            agenda.agendamentos = await Agendamento.find({agendaId: agenda.id});
-        }
-
-        res.send({agendas: agendas});
-        
-            
-           
-        
-    } catch (err) {
-        res.status(400).send({ error: err});
-    }
-});
-router.get('/horarios-disponiveis', async(req, res) => {
-    try {
-        
-
-       
-        let agendas = await Agenda.find({servicoId: req.query.servicoId, userId: req.query.userId});
-        for (let agenda of agendas) {
-            
-        }
-        if (agendas) {
-            for (let agenda of agendas) {
-                agenda.agendamentos = await Agendamento.find({agendaId: agenda.id}).sort({data: 1});
+            if (agenda.servico.includes(req.query.servicoId)) {
+                agenda.agendamentos = await Agendamento.find({agendaId: agenda.id});
+                agendasSelecionadas.push(agenda);
             }
         }
 
-        res.send({agendas: agendas});
+        res.send({agendas: agendasSelecionadas});
         
             
            
@@ -186,5 +167,60 @@ router.get('/horarios-disponiveis', async(req, res) => {
         res.status(400).send({ error: err});
     }
 });
+router.post('/horarios_disponiveis', async(req, res) => {
+    try {
+        
+
+       let inicio = new Date (req.body.data);
+       let fim = new Date (req.body.data);
+       let agenda = await Agenda.findOne({ _id: req.body.agendaId });
+       let servico = await Servico.findOne({ _id: req.body.servicoId});
+       agenda.tempoAtendimento = servico.tempoAtendimento;
+       inicio.setHours(parseInt(agenda.horaInicio.split(':')[0]), parseInt(agenda.horaInicio.split(':')[1]));
+       fim.setHours(parseInt(agenda.horaFim.split(':')[0]), parseInt(agenda.horaFim.split(':')[1]));
+       agenda.horarios = [];
+        let agendamentos = await Agendamento.find({agendaId: req.body.agendaId, data: {$gte: inicio, $lte: fim}}).sort({data: 1});
+        if (agendamentos.length < 1) {
+            while (inicio < fim) {
+                agenda.horarios.push(inicio);
+                inicio = moment(inicio).add(agenda.tempoAtendimento + 10, 'm').toDate();
+            }
+        } else {
+            while (inicio < fim) {
+                let livre = true;
+                let servicoAgendamento = {};
+                for (const agendamento of agendamentos) {
+                    servicoAgendamento = servico;
+                    if (agendamento.servicoId !== req.body.servicoId) {
+                        servicoAgendamento = await Servico.findOne({ _id: agendamento.servicoId });
+                    }
+                    const horarioFim = moment(inicio).add(parseInt(agenda.tempoAtendimento) + 10, 'm').toDate();
+                    const agendamentoInicio = new Date(agendamento.data);
+                    const agendamentoFim = moment(agendamentoInicio).add(parseInt(servicoAgendamento.tempoAtendimento) + 10, 'm').toDate();
+
+                    if ((inicio < agendamentoFim ||
+                        horarioFim < agendamentoInicio) &&
+                        (agendamentoFim < inicio ||
+                            agendamentoInicio < horarioFim)) {
+                        livre = false;
+                    }
+                }
+                if (livre) {
+                    agenda.horarios.push(inicio);
+                }
+                inicio = moment(inicio).add(parseInt(agenda.tempoAtendimento) + 10, 'm').toDate();
+            }
+        }
+
+
+        res.send({horarios: agenda.horarios, servico: servico});
+        
+            
+           
+        
+    } catch (err) {
+        res.status(400).send({ error: err});
+    }
+ });
 
 module.exports = app => app.use('/auth', router);

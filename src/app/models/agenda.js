@@ -5,10 +5,6 @@ const AgendaSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    servicoId: {
-        type: String,
-        required: true
-    },
     servico: {
         type: String,
         required: true
@@ -49,11 +45,23 @@ const AgendaSchema = new mongoose.Schema({
         select: true
     },
     formaPagamento: {
+        type: Object,
         dinheiro: Boolean,
         pagSeguro: Boolean
     },
     agendamentos: {
         type: Array,
+        select: true
+    },
+    diasDaSemana: {
+        type: Object,
+        segunda: Boolean,
+        terca: Boolean,
+        quarta: Boolean,
+        quinta: Boolean,
+        sexta: Boolean,
+        sabado: Boolean,
+        domingo: Boolean,
         select: true
     }
 });
