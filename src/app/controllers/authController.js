@@ -8,7 +8,7 @@ const moment = require('moment');
 const authConfig = require('../../config/auth')
 
 const User = require('../models/user');
-const Paciente = require('../models/paciente');
+const Cliente = require('../models/cliente');
 const Servico = require('../models/servico');
 const Agenda = require('../models/agenda');
 const Agendamento = require('../models/agendamento');
@@ -33,7 +33,7 @@ router.post('/register', async(req, res) => {
         
         const userId = user._id;
         if (user.accountType === 1) {
-            await Paciente.create({ userId });
+            await Cliente.create({ userId });
         }
         user.password = undefined;
     

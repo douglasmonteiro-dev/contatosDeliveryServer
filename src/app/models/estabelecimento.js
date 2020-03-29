@@ -1,12 +1,12 @@
 const mongoose = require('../../database');
 const bcrypt = require('bcryptjs');
 
-const PacienteSchema = new mongoose.Schema({
+const EstabelecimentoSchema = new mongoose.Schema({
     userId: {
         type: String,
-        required: true
+        required: false
     },
-    cpf: {
+    nome: {
         type: String,
         required: false,
         lowercase: true
@@ -31,45 +31,39 @@ const PacienteSchema = new mongoose.Schema({
         required: false,
         select: true
     },
+    regiao: {
+        type: String,
+        required: false,
+        select: true
+    },
     telefone: {
         type: String,
         required: false,
         select: true
     },
-    nomeCartao: {
+    ifood: {
         type: String,
         required: false,
         select: true
     },
-    numeroCartao: {
-        type: Number,
+    horarios: {
+        type: String,
         required: false,
         select: true
     },
-    cvvCartao: {
-        type: Number,
+    servico: {
+        type: String,
         required: false,
         select: true
     },
-    mesCartao: {
+    raioDeEntrega: {
         type: Number,
         required: false,
         select: true
-    },
-    anoCartao: {
-        type: Number,
-        required: false,
-        select: true
-    },
-    agendamentos: [{
-        data: Date,
-        servico: String,
-        valor: Number,
-        pagamento: Boolean
-    }]
+    }
 });
 
 
-const Paciente = mongoose.model('Paciente', PacienteSchema);
+const Estabelecimento = mongoose.model('Estabelecimento', EstabelecimentoSchema);
 
-module.exports = Paciente;
+module.exports = Estabelecimento;

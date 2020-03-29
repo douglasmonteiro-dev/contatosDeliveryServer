@@ -66,26 +66,26 @@ router.put('/atualizar', async(req, res) => {
         console.log(JSON.stringify(user));
 
         if (user.accountType == 1)
-        return res.status(400).send({error: 'Usuario Paciente'});
+        return res.status(400).send({error: 'Usuario Cliente'});
 
        
-        await Paciente.findByIdAndUpdate(req.body.dadosPaciente._id, {
+        await Cliente.findByIdAndUpdate(req.body.dadosCliente._id, {
             '$set': {
-                endereco: req.body.dadosPaciente.endereco,
-                lat: req.body.dadosPaciente.lat,
-                lng: req.body.dadosPaciente.lng,
-                celular: req.body.dadosPaciente.celular,
-                telefone: req.body.dadosPaciente.telefone,
-                nomeCartao: req.body.dadosPaciente.nomeCartao,
-                numeroCartao: req.body.dadosPaciente.numeroCartao,
-                mesCartao: req.body.dadosPaciente.mesCartao,
-                anoCartao: req.body.dadosPaciente.anoCartao,
-                cvvCartao: req.body.dadosPaciente.cvvCartao
+                endereco: req.body.dadosCliente.endereco,
+                lat: req.body.dadosCliente.lat,
+                lng: req.body.dadosCliente.lng,
+                celular: req.body.dadosCliente.celular,
+                telefone: req.body.dadosCliente.telefone,
+                nomeCartao: req.body.dadosCliente.nomeCartao,
+                numeroCartao: req.body.dadosCliente.numeroCartao,
+                mesCartao: req.body.dadosCliente.mesCartao,
+                anoCartao: req.body.dadosCliente.anoCartao,
+                cvvCartao: req.body.dadosCliente.cvvCartao
             }
         });
 
 
-        res.send({usuarioPaciente: req.body.usuarioPaciente, dadosPaciente: req.body.dadosPaciente, user: req.userId});
+        res.send({usuarioCliente: req.body.usuarioCliente, dadosCliente: req.body.dadosCliente, user: req.userId});
         
             
            
@@ -100,7 +100,7 @@ router.delete('/apagar', async(req, res) => {
         console.log(JSON.stringify(user));
 
         if (user.accountType == 1)
-        return res.status(400).send({error: 'Usuario Paciente'});
+        return res.status(400).send({error: 'Usuario Cliente'});
 
        
         await Servico.findByIdAndDelete(req.query.userId);
@@ -119,7 +119,7 @@ router.post('/atualizar_servico', async(req, res) => {
     const {userId} = req.body;
     
     try {
-        if (await Paciente.findOne({userId}))
+        if (await Cliente.findOne({userId}))
         return res.status(400).send({error: 'Usuario Ja existe'});
 
         req.body.accountType = 1;

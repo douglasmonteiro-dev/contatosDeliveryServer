@@ -19,7 +19,7 @@ router.get('/', async(req, res) => {
         console.log(JSON.stringify(user));
 
         if (user.accountType == 1)
-        return res.status(400).send({error: 'Usuario Paciente'});
+        return res.status(400).send({error: 'Usuario Cliente'});
 
        
         const agendamento = await Agendamento.find();
@@ -128,7 +128,7 @@ router.delete('/apagar', async(req, res) => {
         console.log(JSON.stringify(agendamento));
 
         if (req.userId !== agendamento.userId)
-        return res.status(400).send({error: 'Consulta de outro Paciente'});
+        return res.status(400).send({error: 'Consulta de outro Cliente'});
 
        
         await Agendamento.findByIdAndDelete(req.query.agendamentoId);

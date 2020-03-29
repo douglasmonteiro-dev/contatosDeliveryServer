@@ -53,7 +53,7 @@ router.get('/selecionar', async(req, res) => {
         console.log(JSON.stringify(user));
 
         if (user.accountType == 1)
-        return res.status(400).send({error: 'Usuario Paciente'});
+        return res.status(400).send({error: 'Usuario Cliente'});
 
        
         const agenda = await Agenda.find({userId: req.query.userId});
@@ -73,7 +73,7 @@ router.delete('/apagar', async(req, res) => {
         console.log(JSON.stringify(user));
 
         if (user.accountType == 1)
-        return res.status(400).send({error: 'Usuario Paciente'});
+        return res.status(400).send({error: 'Usuario Cliente'});
 
        
         await Agenda.findByIdAndDelete(req.query.agendaId);

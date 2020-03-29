@@ -20,12 +20,12 @@ app.use(function(req, res, next) {
 require('./app/controllers/index')(app);
 
 
-https.createServer({
-  key: fs.readFileSync('/etc/letsencrypt/live/tatiane.ntr.br/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/tatiane.ntr.br/fullchain.pem')
-}, app)
-.listen(3000);
-
-
-// http.createServer(app)
+// https.createServer({
+//   key: fs.readFileSync('/etc/letsencrypt/live/tatiane.ntr.br/privkey.pem'),
+//   cert: fs.readFileSync('/etc/letsencrypt/live/tatiane.ntr.br/fullchain.pem')
+// }, app)
 // .listen(3000);
+
+
+http.createServer(app)
+.listen(3000);
